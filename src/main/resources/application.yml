@@ -1,0 +1,16 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /newcep
+
+user1:
+  id: 1001
+  clazz: class1
+  name: zhangsan
+  age: 18
+
+user2:
+  id: 1002
+  clazz: class2
+  name: lisi
+  age: 20
