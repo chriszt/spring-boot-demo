@@ -13,20 +13,14 @@ public class WordCount {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         DataStream<String> ds = env.fromElements(words);
 
-        DataStream<Tuple2<String, Integer>> ds2 = ds.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
-            @Override
-            public void flatMap(String in, Collector<Tuple2<String, Integer>> out) throws Exception {
-                String[] tokens = in.toLowerCase().split("\\.");
-                for (String token : tokens) {
-                    out.collect(new Tuple2<String, Integer>(token, 1));
-                }
+        DataStream<Tuple2<String, Integer>> ds2 = ds.flatMap((FlatMapFunction<String, Tuple2<String, Integer>>) (in, out) -> {
+            String[] tokens = in.toLowerCase().split("\\.");
+            for (String token : tokens) {
+                out.collect(new Tuple2<String, Integer>(token, 1));
             }
-        }).keyBy(new KeySelector<Tuple2<String, Integer>, Object>() {
-            @Override
-            public Object getKey(Tuple2<String, Integer> value) throws Exception {
+        }).keyBy((KeySelector<Tuple2<String, Integer>, Object>) value -> {
 //                System.out.println(value);
-                return value.f0;
-            }
+            return value.f0;
         }).sum(1);
 
         ds2.print();
